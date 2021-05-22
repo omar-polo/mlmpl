@@ -180,16 +180,16 @@ if ($action eq $list{subscribe}) {
 	my $help = $list{'help'};
 
 	# add some well-known headers
-	push(@headers, "List-Help");	push(@headers, "<mailto:$help>");
+	push(@headers, "List-Help");		push(@headers, "<mailto:$help>");
 	push(@headers, "List-Id");		push(@headers, "<$ml>");
-	push(@headers, "List-Owner");	push(@headers, "<mailto:$owner>");
-	push(@headers, "List-Post");	push(@headers, "<mailto:$ml>");
+	push(@headers, "List-Owner");		push(@headers, "<mailto:$owner>");
+	push(@headers, "List-Post");		push(@headers, "<mailto:$ml>");
 	push(@headers, "List-Subscribe");	push(@headers, "<mailto:$subscribe>");
 	push(@headers, "List-Unsubscribe");	push(@headers, "<mailto:$unsubscribe>");
 	push(@headers, "Sender");		push(@headers, "$owner");
 	push(@headers, "X-Complaints-To");	push(@headers, "$owner");
 
-	push(@headers, "To");		push(@headers, "$ml");
+	push(@headers, "To");			push(@headers, "$ml");
 
 	if ($list{'public'}) {
 		push(@headers, "From");		push(@headers, $mail->header('From'));
