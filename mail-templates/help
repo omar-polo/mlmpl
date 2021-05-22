@@ -1,0 +1,18 @@
+From: <$owner>
+To: <$sender>
+Subject: Help for $ml
+Content-Type: text/plain; charset=UTF-8
+
+Hello $sender,
+
+These are the actions that are supported on this list:
+
+ - to subscribe, send an email to <$subaddr>
+ - to unsubscribe, send an email to <$unsubaddr>.
+
+For more information, please contact the postmaster.
+
+Regards,
+
+--
+the postmaster
