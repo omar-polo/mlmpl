@@ -1,6 +1,9 @@
 #!/usr/bin/env perl
 
 use strict;
+use warnings;
+use v5.10;
+
 use DBI;
 use Try::Tiny;
 
@@ -51,8 +54,7 @@ sub tobool {
 
 sub checkmail {
 	if ($_[0] !~ /@/) {
-		print STDERR "'". $_[0] ."' doesn't seem an email address.\n";
-		exit 1;
+		die("'" . $_[0] . "' doesn't seem to be an email address.");
 	}
 }
 
@@ -78,8 +80,7 @@ sub parseopt {
 		} elsif ($_ =~ /^help=/) {
 			($opt{'help'} = $_) =~ s/help=//;
 		} else {
-			print STDERR "Unrecognized option $_\n";
-			exit 1;
+			die("Unrecognized option $_");
 		}
 	}
 
@@ -106,7 +107,7 @@ if ($action eq "list") {
 			my $q = $dbh->prepare('select guy from moderators where ml = ?');
 			$q->execute($ml);
 			while (my @r = $q->fetchrow_array()) {
-				print $r[0], "\n";
+				say $r[0];
 			}
 
 			exit 0;
@@ -115,13 +116,13 @@ if ($action eq "list") {
 		my $q = $dbh->prepare('select guy from subs where ml = ?');
 		$q->execute($ml);
 		while (my @r = $q->fetchrow_array()) {
-			print $r[0], "\n";
+			say $r[0];
 		}
 	} else {
 		my $q = $dbh->prepare('select addr from ml');
 		$q->execute();
 		while (my @r = $q->fetchrow_array()) {
-			print $r[0], "\n";
+			say $r[0];
 		}
 	}
 
@@ -159,8 +160,7 @@ if ($action eq "add") {
 		print "- unsubscribe: ". $opt{unsubscribe} ."\n";
 		print "- help:        ". $opt{help} ."\n";
 	} catch {
-		print STDERR "An error occurred: $_";
-		exit 1;
+		die('an error occurred: $!');
 	};
 
 	exit 0;
@@ -207,15 +207,13 @@ if ($action eq "subscribe") {
 			$q->execute($ml, $guy);
 			print "OK!\n";
 		} catch {
-			print STDERR "Something went wrong: $_\n";
-			exit 1;
+			die("can't subscribe: $!");
 		};
 
 		exit 0;
 	}
 
-	print STDERR "Invalid syntax.\n";
-	exit 1;
+	die('invalid syntax');
 }
 
 if ($action eq "moderator") {
@@ -230,15 +228,13 @@ if ($action eq "moderator") {
 			$q->execute($ml, $guy);
 			print "OK!\n";
 		} catch {
-			print STDERR "Something went wrong: $_\n";
-			exit 1;
+			die("can't add moderator: $!");
 		};
 
 		exit 0;
 	}
 
-	print STDERR "Invalid syntax.\n";
-	exit 1;
+	die("invalid syntax");
 }
 
 if ($action eq 'del') {
@@ -246,29 +242,24 @@ if ($action eq 'del') {
 	my $ml = shift @ARGV;
 	checkmail $ml;
 
-	try {
-		if ($subaction =~ m/^mod/) {
-			my $guy = shift @ARGV;
-			checkmail $guy;
-			my $q = $dbh->prepare('delete from moderators where guy = ? and ml = ?');
-			$q->execute($guy, $ml);
-			print "OK!\n";
-		} elsif ($subaction =~ m/^sub/) {
-			my $guy = shift @ARGV;
-			checkmail $guy;
-			my $q = $dbh->prepare('delete from subs where guy = ? and ml = ?');
-			$q->execute($guy, $ml);
-			print "OK!\n";
-		} elsif ($subaction =~ m/^list/) {
-			my $q = $dbh->prepare('delete from ml where addr = ?');
-			$q->execute($ml);
-			print "OK!\n";
-		} else {
-			print STDERR "Invalid syntax.\n";
-			exit 1;
-		}
-	} catch {
-		print STDERR "Something went wrong: $_\n";
+	if ($subaction =~ m/^mod/) {
+		my $guy = shift @ARGV;
+		checkmail $guy;
+		my $q = $dbh->prepare('delete from moderators where guy = ? and ml = ?');
+		$q->execute($guy, $ml);
+		print "OK!\n";
+	} elsif ($subaction =~ m/^sub/) {
+		my $guy = shift @ARGV;
+		checkmail $guy;
+		my $q = $dbh->prepare('delete from subs where guy = ? and ml = ?');
+		$q->execute($guy, $ml);
+		print "OK!\n";
+	} elsif ($subaction =~ m/^list/) {
+		my $q = $dbh->prepare('delete from ml where addr = ?');
+		$q->execute($ml);
+		print "OK!\n";
+	} else {
+		print STDERR "Invalid syntax.\n";
 		exit 1;
-	};
+	}
 }
