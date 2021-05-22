@@ -1,0 +1,5 @@
+- public :: the outgoing email show the original address as sender if
+            true, a default address (the ml ones) otherwise
+- archive :: if a maildir as archive should be used
+- moderated :: only a list of people are allowed to post if true,
+               everyone subscribed is allowed otherwise
