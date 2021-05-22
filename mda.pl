@@ -70,13 +70,8 @@ sub send_email {
 	return;
 }
 
-sub usage {
-	print "Usage: $0\n";
-	print "RTFM\n";
-}
-
 if (!@ARGV) {
-	usage; exit 1;
+	die('no data given');
 }
 
 my $dbh = DBI->connect("dbi:SQLite:dbname=$db_file", "", "", {AutoCommit=>1, RaiseError=>1, PrintError=>1});
@@ -86,8 +81,7 @@ my $ml     = shift @ARGV;
 my $sender = shift @ARGV;
 
 if (!$action || !$ml || !$sender) {
-	print STDERR "Missing action, ml and/or sender\n";
-	exit 1;
+	die('missing action, ml and/or sender');
 }
 
 my $q = $dbh->prepare('select name, public, moderated, archive, addr, owner, subscribe, unsubscribe, help from ml where addr = ?');
