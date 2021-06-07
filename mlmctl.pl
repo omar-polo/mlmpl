@@ -57,9 +57,9 @@ sub checkmail {
 	}
 }
 
-# ex: parseopt {}, @ARGV
+# ex: parseopt {}
 sub parseopt {
-	my (%opt, @list) = @_;
+	my %opt = @{$_[0]};
 
 	foreach (@ARGV) {
 		if ($_ =~ /^name=/) {
@@ -143,7 +143,7 @@ if ($action eq "add") {
 		help		=> "help-". $ml
 	    );
 
-	%opt = parseopt %opt, @ARGV;
+	%opt = parseopt \%opt;
 
 	my $q = $dbh->prepare('insert into ml(addr, name, public, moderated, archive, owner, subscribe, unsubscribe, help) values (?, ?, ?, ?, ?, ?, ?, ?, ?)')
 	    or die("cannot prepare statement: $!");
@@ -185,7 +185,7 @@ if ($action eq "edit") {
 	print "\taddr\t\tname\tpublic\tmod\tarchive\towner\t\t\tsub\t\t\tunsub\t\t\t\thelp\n";
 	print "BEFORE:\t". $opt{'addr'} ."\t". $opt{'name'} ."\t". $opt{'public'} ."\t". $opt{'moderated'} ."\t". $opt{'archive'} ."\t". $opt{'owner'} ."\t". $opt{'subscribe'} ."\t". $opt{'unsubscribe'} ."\t". $opt{'help'} ."\n";
 
-	%opt = parseopt %opt, @ARGV;
+	%opt = parseopt \%opt;
 
 	print "AFTER:\t". $opt{'addr'} ."\t". $opt{'name'} ."\t". $opt{'public'} ."\t". $opt{'moderated'} ."\t". $opt{'archive'} ."\t". $opt{'owner'} ."\t". $opt{'subscribe'} ."\t". $opt{'unsubscribe'} ."\t". $opt{'help'} ."\n";
 	$q = $dbh->prepare('update ml set addr = ?,  name = ?, public = ?, moderated = ?, archive = ?, owner = ?, subscribe = ?, unsubscribe = ?, help = ? where addr = ?');
