@@ -23,36 +23,37 @@ by `$MLMPL_CONFIG`).
 
 ## Tutorial
 
-1. make sure you have all the dependencies installed
-2. fetch the code
-   ```
-   git clone https://git.omarpolo.com/mlmpl
-   ```
-3. copy `config.pl` in `/etc/mlmpl/config.pl` and customize the fields
-4. initialize the database
-    ```
-    sqlite3 /path/to/db.sqlite < schema.sql
-    ```
+Make sure you have all the dependencies installed, then fetch the code:
+```
+git clone https://git.omarpolo.com/mlmpl
+```
 
-5. create a mailing list/news letter
-    ```
-    ./mlmctl.pl add news@example.com	\
-        name='Example news letter'		\
-        public=false					\
-        archive=true					\
-        moderated=true
-    ```
-6. add a moderator
-    ```
-    ./mlmctl.pl moderator news@example.com your@email.addre.ss
-    ```
-7. point your mail server to `mda.pl`.
+Copy `config.pl` in `/etc/mlmpl/config.pl` and customize the fields and initialise the database
+```
+sqlite3 /path/to/db.sqlite < schema.sql
+```
+
+Create a mailing list/news letter:
+```
+./mlmctl.pl add news@example.com	\
+	name='Example news letter'		\
+	public=false					\
+	archive=true					\
+	moderated=true
+```
+
+Add a moderator:
+```
+./mlmctl.pl moderator news@example.com your@email.addre.ss
+```
+
+To finish, point your mail server to `mda.pl`.  Done!
 
 
 ## using mlmpl with OpenSMTPD
 
 To use it with OpenSMTPD you need two tables.  Other setups are
-possible, but this is what I reccomend:
+possible, but this is what I recommend:
 
  - the list of addresses:
 
