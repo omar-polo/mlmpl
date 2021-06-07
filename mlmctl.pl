@@ -23,7 +23,7 @@ sub usage {
 
 	print " - add ml [options]\n";
 	print "   Add a new mailing list. The options are `name=<name>` (default ''),\n";
-	print "   `publi=bool` (default true), `moderated=bool` (default false),\n";
+	print "   `public=bool` (default true), `moderated=bool` (default false),\n";
 	print "   `archive=bool` (default true).\n\n";
 
 	print " - edit ml [options]\n";
