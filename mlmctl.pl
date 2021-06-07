@@ -24,7 +24,9 @@ sub usage {
 	print " - add ml [options]\n";
 	print "   Add a new mailing list. The options are `name=<name>` (default ''),\n";
 	print "   `public=bool` (default true), `moderated=bool` (default false),\n";
-	print "   `archive=bool` (default true).\n\n";
+	print "   `archive=bool` (default true).  Additionally, it takes also `owner`,\n";
+	print "   `subscribe`, `unsubscribe` and `help` options to customize the\n";
+	print "   default addresses.\n\n";
 
 	print " - edit ml [options]\n";
 	print "   Like add, but used to edit the option of the given mailing\n";
