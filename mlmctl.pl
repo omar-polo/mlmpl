@@ -61,7 +61,7 @@ sub checkmail {
 
 # ex: parseopt {}
 sub parseopt {
-	my %opt = @{$_[0]};
+	my %opt = %{$_[0]};
 
 	foreach (@ARGV) {
 		if ($_ =~ /^name=/) {
