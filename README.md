@@ -25,32 +25,27 @@ by `$MLMPL_CONFIG`).
 
 1. make sure you have all the dependencies installed
 2. fetch the code
-```
-git clone https://git.omarpolo.com/mlmpl
-```
+   ```
+   git clone https://git.omarpolo.com/mlmpl
+   ```
 3. copy `config.pl` in `/etc/mlmpl/config.pl` and customize the fields
 4. initialize the database
-
-```
-sqlite3 /path/to/db.sqlite < schema.sql
-```
+    ```
+    sqlite3 /path/to/db.sqlite < schema.sql
+    ```
 
 5. create a mailing list/news letter
-
-```
-./mlmctl.pl add news@example.com	\
-	name='Example news letter'		\
-	public=false					\
-	archive=true					\
-	moderated=true
-```
-
+    ```
+    ./mlmctl.pl add news@example.com	\
+        name='Example news letter'		\
+        public=false					\
+        archive=true					\
+        moderated=true
+    ```
 6. add a moderator
-
-```
-./mlmctl.pl moderator news@example.com your@email.addre.ss
-```
-
+    ```
+    ./mlmctl.pl moderator news@example.com your@email.addre.ss
+    ```
 7. point your mail server to `mda.pl`.
 
 
