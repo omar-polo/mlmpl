@@ -47,7 +47,7 @@ sub usage {
 }
 
 sub tobool {
-	if ($_[0] =~ /(on|true|1)$/) {
+	if ($_[0] =~ /(on|true|yes|1)$/) {
 		return "true";
 	}
 	return "false";
