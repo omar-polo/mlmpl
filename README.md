@@ -25,25 +25,31 @@ by `$MLMPL_CONFIG`).
 
 1. make sure you have all the dependencies installed
 2. fetch the code
-
-	git clone https://git.omarpolo.com/mlmpl
-
+```
+git clone https://git.omarpolo.com/mlmpl
+```
 3. copy `config.pl` in `/etc/mlmpl/config.pl` and customize the fields
 4. initialize the database
 
-	sqlite3 /path/to/db.sqlite < schema.sql
+```
+sqlite3 /path/to/db.sqlite < schema.sql
+```
 
 5. create a mailing list/news letter
 
-	./mlmctl.pl add news@example.com	\
-		name='Example news letter'		\
-		public=false					\
-		archive=true					\
-		moderated=true
+```
+./mlmctl.pl add news@example.com	\
+	name='Example news letter'		\
+	public=false					\
+	archive=true					\
+	moderated=true
+```
 
 6. add a moderator
 
-	./mlmctl.pl moderator news@example.com your@email.addre.ss
+```
+./mlmctl.pl moderator news@example.com your@email.addre.ss
+```
 
 7. point your mail server to `mda.pl`.
 
@@ -55,33 +61,39 @@ possible, but this is what I reccomend:
 
  - the list of addresses:
 
-	# /etc/mail/news-addresses
-	news@example.com
-	owner-news@example.com
-	subscribe-news@example.com
-	unsubscribe-news@example.com
-	help-news@example.com
+```
+# /etc/mail/news-addresses
+news@example.com
+owner-news@example.com
+subscribe-news@example.com
+unsubscribe-news@example.com
+help-news@example.com
+```
 
  - an alias table so OpenSMTPD can recognise the addresses:
 
-	# /etc/mail/news-aliases
-	news           localuser
-	owner          localuser
-	subscribe      localuser
-	unsubscribe    localuser
-	help           localuser
+```
+# /etc/mail/news-aliases
+news           localuser
+owner          localuser
+subscribe      localuser
+unsubscribe    localuser
+help           localuser
+```
 
 Then you can hook everything together with:
 
-	table news         file:/etc/mail/news-addresses
-	table news-aliases file:/etc/mail/news-aliases
+```
+table news         file:/etc/mail/news-addresses
+table news-aliases file:/etc/mail/news-aliases
 
-	action "newsletter" \
-		mda "/usr/bin/perl /path/mda.pl %{rcpt:lowercase|strip} news@example.com %{sender:lowercase|strip}" \
-		user "localuser" \
-		alias <news-aliases>
+action "newsletter" \
+	mda "/usr/bin/perl /path/mda.pl %{rcpt:lowercase|strip} news@example.com %{sender:lowercase|strip}" \
+	user "localuser" \
+	alias <news-aliases>
 
-	match from any for rcpt-to <news> action "newsletter"
+match from any for rcpt-to <news> action "newsletter"
 
-	# "! rcpt-to" so mails for the mailing list don't get matched
-	match from any for domain <domains> ! rcpt-to <news> action "local_mail"
+# "! rcpt-to" so mails for the mailing list don't get matched
+match from any for domain <domains> ! rcpt-to <news> action "local_mail"
+```
