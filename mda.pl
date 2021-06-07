@@ -2,6 +2,8 @@
 
 use strict;
 use v5.10;
+use warnings;
+
 use DBI;
 use Net::SMTP;
 use Email::Simple;
