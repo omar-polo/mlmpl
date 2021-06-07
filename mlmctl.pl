@@ -90,7 +90,8 @@ if (!@ARGV) {
 	usage; exit 1;
 }
 
-my $dbh = DBI->connect("dbi:SQLite:dbname=$db_file", "", "", {AutoCommit=>1, RaiseError=>1, PrintError=>1});
+my $dbh = DBI->connect("dbi:SQLite:dbname=$db_file", "", "",
+		       {AutoCommit=>1, RaiseError=>1, PrintError=>1});
 
 my $action = shift @ARGV;
 
@@ -147,7 +148,9 @@ if ($action eq "add") {
 
 	my $q = $dbh->prepare('insert into ml(addr, name, public, moderated, archive, owner, subscribe, unsubscribe, help) values (?, ?, ?, ?, ?, ?, ?, ?, ?)')
 	    or die("cannot prepare statement: $!");
-	$q->execute($ml, $opt{'name'}, $opt{'public'}, $opt{'moderated'}, $opt{'archive'}, $opt{'owner'}, $opt{'subscribe'}, $opt{'unsubscribe'}, $opt{'help'})
+	$q->execute($ml, $opt{'name'}, $opt{'public'}, $opt{'moderated'},
+		    $opt{'archive'}, $opt{'owner'}, $opt{'subscribe'},
+		    $opt{'unsubscribe'}, $opt{'help'})
 	    or die("cannot add list: $!");
 
 	print "Added ml $ml with the following option:\n";
@@ -211,6 +214,7 @@ if ($action eq "subscribe") {
 
 if ($action eq "moderator") {
 	my $ml = shift @ARGV;
+
 	if ($ml) {
 		my $guy = shift @ARGV;
 
