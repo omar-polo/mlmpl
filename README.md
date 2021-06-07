@@ -35,12 +35,19 @@ sqlite3 /path/to/db.sqlite < schema.sql
 
 Create a mailing list/news letter:
 ```
-./mlmctl.pl add news@example.com	\
-	name='Example news letter'		\
-	public=false					\
-	archive=true					\
-	moderated=true
+./mlmctl.pl add news@example.com    \
+    name='Example news letter'      \
+    public=false                    \
+    archive=true                    \
+    moderated=true
 ```
+
+The options means:
+
+ - **public**: the outgoing emails use the original address if true,
+   or the default address of the mailing list otherwise
+ - **archive**: archive all the message sent
+ - **moderated**: only the moderators are allowed to post if true
 
 Add a moderator:
 ```
