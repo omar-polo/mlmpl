@@ -3,7 +3,6 @@
 use strict;
 use v5.10;
 use DBI;
-use Try::Tiny;
 use Net::SMTP;
 use Email::Simple;
 use Time::HiRes qw(gettimeofday);
@@ -107,40 +106,38 @@ $list{moderated} = tobool $r[2];
 $list{archive} = tobool $r[3];
 
 if ($action eq $list{subscribe}) {
-	try {
-		my $q = $dbh->prepare('insert into subs(ml, guy) values (?, ?)');
-		$q->execute($ml, $sender);
-	} catch {
-		# the user is already subscribed, or the ml doesn't
-		# exists. soft-ignore this request
-		exit 0;
-	};
+	my $q = $dbh->prepare('insert into subs(ml, guy) values (?, ?)');
+
+	# if it fails, it means that the user is already subscribed,
+	# or the ml doesn't exists. soft-ignore this request
+	$q->execute($ml, $sender) or exit(0);
 
 	my $mail = r('subscribed', %list);
 	send_email($list{'addr'}, [$sender], $mail);
 } elsif ($action eq $list{unsubscribe}) {
-	try {
-		# get the subs date
-		my $q = $dbh->prepare('select sub_date from subs where ml = ? and guy = ?');
-		$q->execute($ml, $sender);
-		my @res = $q->fetchrow_array();
-		my $was = $res[0];
+	# get the subs date
+	my $q = $dbh->prepare('select sub_date from subs where ml = ? and guy = ?');
+	$q->execute($ml, $sender);
+	my @res = $q->fetchrow_array();
 
-		# delete from subs
-		$q = $dbh->prepare('delete from subs where ml = ? and guy = ?');
-		$q->execute($ml, $sender);
+	# the user may not be subscribed, the list may not exists and
+	# so on... Kindly ignore this request
+	if (@res == 0) {
+		exit 0
+	}
 
-		# record the unsubscription
-		$q = $dbh->prepare('insert into unsubscribed(ml, guy, was) values (?,?,?)');
-		$q->execute($ml, $sender, $was);
+	my $was = $res[0];
 
-		my $mail = r('unsubscribed', %list);
-		send_email($list{'addr'}, [$sender], $mail);
-	} catch {
-		# also here, the user may not be subscribed, the list may not
-		# exists and so on... Kindly ignore this request
-		exit 0;
-	};
+	# delete from subs
+	$q = $dbh->prepare('delete from subs where ml = ? and guy = ?');
+	$q->execute($ml, $sender);
+
+	# record the unsubscription
+	$q = $dbh->prepare('insert into unsubscribed(ml, guy, was) values (?,?,?)');
+	$q->execute($ml, $sender, $was);
+
+	my $mail = r('unsubscribed', %list);
+	send_email($list{'addr'}, [$sender], $mail);
 } elsif ($action eq $list{help}) {
 	my $mail = r('help', %list);
 	send_email($list{'addr'}, [$sender], $mail);

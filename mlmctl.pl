@@ -5,7 +5,6 @@ use warnings;
 use v5.10;
 
 use DBI;
-use Try::Tiny;
 
 our $db_file;
 
@@ -146,22 +145,20 @@ if ($action eq "add") {
 
 	%opt = parseopt %opt, @ARGV;
 
-	try {
-		my $q = $dbh->prepare('insert into ml(addr, name, public, moderated, archive, owner, subscribe, unsubscribe, help) values (?, ?, ?, ?, ?, ?, ?, ?, ?)');
-		$q->execute($ml, $opt{'name'}, $opt{'public'}, $opt{'moderated'}, $opt{'archive'}, $opt{'owner'}, $opt{'subscribe'}, $opt{'unsubscribe'}, $opt{'help'});
+	my $q = $dbh->prepare('insert into ml(addr, name, public, moderated, archive, owner, subscribe, unsubscribe, help) values (?, ?, ?, ?, ?, ?, ?, ?, ?)')
+	    or die("cannot prepare statement: $!");
+	$q->execute($ml, $opt{'name'}, $opt{'public'}, $opt{'moderated'}, $opt{'archive'}, $opt{'owner'}, $opt{'subscribe'}, $opt{'unsubscribe'}, $opt{'help'})
+	    or die("cannot add list: $!");
 
-		print "Added ml $ml with the following option:\n";
-		print "- name:        ". $opt{name} ."\n";
-		print "- public:      ". $opt{public} ."\n";
-		print "- moderated:   ". $opt{moderated} ."\n";
-		print "- archive:     ". $opt{archive} ."\n";
-		print "- owner:       ". $opt{owner} ."\n";
-		print "- subscribe:   ". $opt{subscribe} ."\n";
-		print "- unsubscribe: ". $opt{unsubscribe} ."\n";
-		print "- help:        ". $opt{help} ."\n";
-	} catch {
-		die('an error occurred: $!');
-	};
+	print "Added ml $ml with the following option:\n";
+	print "- name:        ". $opt{name} ."\n";
+	print "- public:      ". $opt{public} ."\n";
+	print "- moderated:   ". $opt{moderated} ."\n";
+	print "- archive:     ". $opt{archive} ."\n";
+	print "- owner:       ". $opt{owner} ."\n";
+	print "- subscribe:   ". $opt{subscribe} ."\n";
+	print "- unsubscribe: ". $opt{unsubscribe} ."\n";
+	print "- help:        ". $opt{help} ."\n";
 
 	exit 0;
 }
@@ -202,13 +199,9 @@ if ($action eq "subscribe") {
 	if ($guy) {
 		checkmail $guy;
 
-		try {
-			my $q = $dbh->prepare('insert into subs(ml, guy) values (?, ?)');
-			$q->execute($ml, $guy);
-			print "OK!\n";
-		} catch {
-			die("can't subscribe: $!");
-		};
+		my $q = $dbh->prepare('insert into subs(ml, guy) values (?, ?)');
+		$q->execute($ml, $guy) or die("can't subscribe $guy: $!");
+		print "OK!\n";
 
 		exit 0;
 	}
@@ -223,13 +216,9 @@ if ($action eq "moderator") {
 
 		checkmail $guy;
 
-		try {
-			my $q = $dbh->prepare('insert into moderators(ml, guy) values (?, ?)');
-			$q->execute($ml, $guy);
-			print "OK!\n";
-		} catch {
-			die("can't add moderator: $!");
-		};
+		my $q = $dbh->prepare('insert into moderators(ml, guy) values (?, ?)');
+		$q->execute($ml, $guy) or die("can't add moderator $guy: $!");
+		print "OK!\n";
 
 		exit 0;
 	}
