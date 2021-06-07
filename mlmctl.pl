@@ -146,12 +146,10 @@ if ($action eq "add") {
 
 	%opt = parseopt \%opt;
 
-	my $q = $dbh->prepare('insert into ml(addr, name, public, moderated, archive, owner, subscribe, unsubscribe, help) values (?, ?, ?, ?, ?, ?, ?, ?, ?)')
-	    or die("cannot prepare statement: $!");
+	my $q = $dbh->prepare('insert into ml(addr, name, public, moderated, archive, owner, subscribe, unsubscribe, help) values (?, ?, ?, ?, ?, ?, ?, ?, ?)');
 	$q->execute($ml, $opt{'name'}, $opt{'public'}, $opt{'moderated'},
 		    $opt{'archive'}, $opt{'owner'}, $opt{'subscribe'},
-		    $opt{'unsubscribe'}, $opt{'help'})
-	    or die("cannot add list: $!");
+		    $opt{'unsubscribe'}, $opt{'help'});
 
 	print "Added ml $ml with the following option:\n";
 	print "- name:        ". $opt{name} ."\n";
@@ -203,7 +201,7 @@ if ($action eq "subscribe") {
 		checkmail $guy;
 
 		my $q = $dbh->prepare('insert into subs(ml, guy) values (?, ?)');
-		$q->execute($ml, $guy) or die("can't subscribe $guy: $!");
+		$q->execute($ml, $guy);
 		print "OK!\n";
 
 		exit 0;
@@ -221,7 +219,7 @@ if ($action eq "moderator") {
 		checkmail $guy;
 
 		my $q = $dbh->prepare('insert into moderators(ml, guy) values (?, ?)');
-		$q->execute($ml, $guy) or die("can't add moderator $guy: $!");
+		$q->execute($ml, $guy);
 		print "OK!\n";
 
 		exit 0;
