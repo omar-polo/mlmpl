@@ -75,6 +75,7 @@ if (!@ARGV) {
 
 my $dbh = DBI->connect("dbi:SQLite:dbname=$db_file", "", "", {AutoCommit=>1, RaiseError=>1, PrintError=>1});
 
+# mda.pl <rcpt> <ml> <sender>
 my $action = shift @ARGV;
 my $ml     = shift @ARGV;
 my $sender = shift @ARGV;
