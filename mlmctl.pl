@@ -54,9 +54,7 @@ sub tobool {
 }
 
 sub checkmail {
-	if ($_[0] !~ /@/) {
-		die("'" . $_[0] . "' doesn't seem to be an email address.");
-	}
+	die("$_[0] doesn't look like an email address") if $_[0] !~ /@/;
 }
 
 # ex: parseopt {}
