@@ -28,7 +28,7 @@ Make sure you have all the dependencies installed, then fetch the code:
 git clone https://git.omarpolo.com/mlmpl
 ```
 
-Copy `config.pl` in `/etc/mlmpl/config.pl` and customize the fields and initialise the database
+Copy `config.pl` to `/etc/mlmpl/config.pl`, customize the values and initialise the database
 ```
 sqlite3 /path/to/db.sqlite < schema.sql
 ```
@@ -50,7 +50,7 @@ Add a moderator:
 To finish, point your mail server to `mda.pl`.  Done!
 
 
-## using mlmpl with OpenSMTPD
+## Using mlmpl with OpenSMTPD
 
 To use it with OpenSMTPD you need two tables.  Other setups are
 possible, but this is what I recommend:
