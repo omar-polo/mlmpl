@@ -103,7 +103,7 @@ if ($action eq "list") {
 	my $ml = shift @ARGV;
 	if ($ml) {
 		my $a = shift @ARGV;
-		if ($a =~ m/mod/) {
+		if ($a and $a =~ m/mod/) {
 			my $q = $dbh->prepare('select guy from moderators where ml = ?');
 			$q->execute($ml);
 			while (my @r = $q->fetchrow_array()) {
